@@ -32,3 +32,20 @@ export function generateBillNumber(): string {
   const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
   return `INV${year}${month}${random}`;
 }
+
+// Utility function to format date
+export function formatDate(date: Date): string {
+  return date.toLocaleDateString('en-IN', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+  });
+}
+
+// Utility function to calculate GST
+export function calculateGST(amount: number): { cgst: number; sgst: number; total: number } {
+  const cgst = amount * 0.09;
+  const sgst = amount * 0.09;
+  const total = amount + cgst + sgst;
+  return { cgst, sgst, total };
+}

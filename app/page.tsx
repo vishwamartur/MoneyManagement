@@ -17,7 +17,11 @@ export default function Home() {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Error fetching session:', error.message);
+        return;
+      }
       if (session) {
         router.push('/dashboard');
       }
@@ -25,8 +29,12 @@ export default function Home() {
 
     checkAuth();
 
-    const { data: authListener } = supabase.auth.onAuthStateChange(
+    const { data: authListener, error } = supabase.auth.onAuthStateChange(
       (event, session) => {
+        if (error) {
+          console.error('Error on auth state change:', error.message);
+          return;
+        }
         if (session) {
           router.push('/dashboard');
         }
@@ -34,7 +42,9 @@ export default function Home() {
     );
 
     return () => {
-      authListener.subscription.unsubscribe();
+      if (authListener) {
+        authListener.subscription.unsubscribe();
+      }
     };
   }, [router]);
 
