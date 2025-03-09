@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS transactions (
   category_id uuid REFERENCES categories(id),
   amount decimal(12,2) NOT NULL,
   currency text NOT NULL DEFAULT 'USD',
-  payment_method text NOT NULL CHECK (payment_method IN ('cash', 'upi', 'card', 'bank_transfer')),
+  payment_method text NOT NULL CHECK (payment_method IN ('cash', 'upi', 'card', 'bank_transfer', 'income')),
   description text,
   transaction_date timestamptz NOT NULL DEFAULT now(),
   created_at timestamptz DEFAULT now(),

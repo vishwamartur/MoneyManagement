@@ -300,6 +300,7 @@ export default function Transactions() {
                       <SelectItem value="card">Card</SelectItem>
                       <SelectItem value="upi">UPI</SelectItem>
                       <SelectItem value="bank_transfer">Bank Transfer</SelectItem>
+                      <SelectItem value="income">Income</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
