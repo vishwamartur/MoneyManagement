@@ -32,7 +32,7 @@ export default function Dashboard() {
       if (!user) return;
 
       // Fetch transactions with categories
-      const { data: transactions } = await supabase
+      const { data: transactions, error } = await supabase
         .from('transactions')
         .select(`
           amount,
@@ -45,6 +45,11 @@ export default function Dashboard() {
         `)
         .eq('user_id', user.id)
         .order('transaction_date', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching transactions:', error);
+        return;
+      }
 
       if (transactions) {
         // Calculate totals

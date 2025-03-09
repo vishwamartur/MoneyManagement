@@ -26,13 +26,35 @@ export default function DashboardLayout({
 
   useEffect(() => {
     const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const { data: { session }, error } = await supabase.auth.getSession();
+      if (error) {
+        console.error('Error fetching session:', error.message);
+        return;
+      }
       if (!session) {
         router.push('/auth/login');
       }
     };
 
     checkAuth();
+
+    const { data: authListener, error } = supabase.auth.onAuthStateChange(
+      (event, session) => {
+        if (error) {
+          console.error('Error on auth state change:', error.message);
+          return;
+        }
+        if (!session) {
+          router.push('/auth/login');
+        }
+      }
+    );
+
+    return () => {
+      if (authListener) {
+        authListener.subscription.unsubscribe();
+      }
+    };
   }, [router]);
 
   return (
@@ -81,7 +103,11 @@ export default function DashboardLayout({
                 variant="ghost"
                 size="icon"
                 onClick={async () => {
-                  await supabase.auth.signOut();
+                  const { error } = await supabase.auth.signOut();
+                  if (error) {
+                    console.error('Error signing out:', error.message);
+                    return;
+                  }
                   router.push('/');
                 }}
               >
